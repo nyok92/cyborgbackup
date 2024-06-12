@@ -1,0 +1,17 @@
+.env
+.vagrant
+*.deb
+.idea
+.scannerwork
+.tox
+deploy.sh
+secret.txt
+coverage.xml
+output_flake8.txt
+celerybeat.pid
+debian/cyborgbackup
+cyborgbackup/var
+**/__pycache__
+**/_build
+**/.coverage
+venv
