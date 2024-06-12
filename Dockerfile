@@ -33,6 +33,8 @@ RUN chown -R cyborgbackup /var/run/cyborgbackup /var/tmp/cyborgbackup
 ADD tools/scripts/launch_cyborg.sh /usr/local/bin/launch_cyborg.sh
 ADD tools/scripts/wait-for-migrations /usr/local/bin/wait-for-migrations
 
+RUN chmod a+x /usr/local/bin/launch_cyborg.sh
+
 USER cyborgbackup
 
 WORKDIR /cyborgbackup/
