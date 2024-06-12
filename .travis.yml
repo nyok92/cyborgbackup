@@ -1,0 +1,36 @@
+sudo: true
+language: python
+addons:
+  postgresql: "9.4"
+services:
+  - postgresql
+  - rabbitmq
+addons:
+  apt:
+    packages:
+    - rabbitmq-server
+python:
+  - "3.5"
+  - "3.6"
+  - "3.7"
+install:
+  - pip install -r requirements.txt
+  - pip install -U tox codecov tox-travis flake8
+before_script:
+  - psql -c 'create database cyborgbackup;' -U postgres
+  - psql -c "CREATE USER cyborgbackup WITH PASSWORD 'cyborgbackup';" -U postgres
+  - sudo rabbitmqctl add_vhost cyborgbackup
+  - sudo rabbitmqctl add_user cyborgbackup cyborgbackup
+  - sudo rabbitmqctl set_permissions -p cyborgbackup cyborgbackup ".*" ".*" ".*"
+  - make initenv
+  - make DEVVERSION
+  - cd src && python manage.py migrate
+  - python manage.py create_preload_data
+  #- flake8 --max-line-length=119 --exclude './cyborgbackup/ui/static/,./cyborgbackup/main/migrations/' .
+test:
+  adapter: postgresql
+  database: cyborgbackup
+script:
+  - tox
+after_success:
+  - codecov
